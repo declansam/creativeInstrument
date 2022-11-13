@@ -16,6 +16,7 @@
 
 */
 
+// Global variables 
 const int trigPin = 9;
 const int echoPin = 10;
 int pPin = 8;
@@ -28,6 +29,7 @@ int pVoltRead = 0;
 int trueVolt = 0;
 float myList[2];
 
+
 void setup() 
 {
   pinMode(11, INPUT); //button
@@ -37,14 +39,16 @@ void setup()
   Serial.begin(9600); // Starts the serial communication
 }
 
+
 void loop() 
 {
-  pVoltRead = analogRead(potentioPin);
+  pVoltRead = analogRead(potentioPin);          // Potentiometer input
   // Serial.print("PotentioMeter Reading: ");
   // Serial.println(pVoltRead);
-  trueVolt = (pVoltRead * 5.0/1023);
+  trueVolt = (pVoltRead * 5.0/1023);           // Conversion of potentiometer input (mapped from 1 to 5 volt) 
   Serial.println(trueVolt);
-
+ 
+  // Time interval 
   if (millis() - currentTime > 200 || currentTime == 0) 
   {
     // If the switch is pressed, reset the offset
@@ -56,7 +60,8 @@ void loop()
       currentTime = millis();
     }
   }
-
+  
+ // Calculating distance considering the offset
   int distance = findDistance() - distanceOffset;
   // Serial.println("Distance: ");
   // Serial.println(distance);
@@ -70,8 +75,8 @@ void loop()
   int pitch = pitch_ * myList[0];
   int toneDuration = myList[1];
 
-
-
+  
+  // If the distance is less than 20 cm, play the tune, else notone()
   if(distance <= 20)
   {
     tone(pPin, pitch,toneDuration);                              // Controls 1. PinNumber, 2. Frequency, 3. Time Duration
@@ -104,6 +109,8 @@ int findDistance()
 }
 
 
+// Function that determines the frequency of each sound
+// Takes distance calculated as a parameter - argument is mapped from (0 to 20) cm before it is fed into the function
 float intoNotes(int x)
 {
   switch(x)
